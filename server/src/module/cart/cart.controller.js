@@ -118,7 +118,8 @@ class CartController {
             })
 
             const {data: transformCartDetails, actualQuantity} = await cartSvc.updateTransformCartDetails(req, cartDetails, productDetails);
-            
+            console.log(transformCartDetails)
+
             const updatedCartDetails = await cartSvc.updateCart({_id: id}, {$set: transformCartDetails})
 
             productDetails.stock -= actualQuantity
@@ -158,6 +159,23 @@ class CartController {
                 code: 200, 
                 status: "Cart deleted",
                 message: "Cart deleted"
+            })
+        } catch (error) {
+            throw error
+        }
+    }
+
+    getSingleCartById = async (req, res, next) => {
+        try {   
+            const {id} = req.params
+
+            const cartDetails = await cartSvc.getCartById(id)
+
+            res.json({
+                data: cartDetails, 
+                message: "Success", 
+                code: 200, 
+                options: null
             })
         } catch (error) {
             throw error

@@ -1,5 +1,5 @@
 import { Spin } from "antd";
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import publicSvc from '../../service/public.service';
 import type { ListCategoryDetails, ListProductDetails } from './homepage.validation';
 import { FaAngleRight } from 'react-icons/fa';
@@ -10,6 +10,10 @@ import SearchPage from "../SearchPage/SearchPage";
 import NoProductFound from '../../assets/original-edbc9b1a905204e54ac50ca36215712a.webp'
 import Sidebar from "../../component/Sidebar";
 import CustomerAddToCartPage from "../Cusomter/CustomerAddToCartPage";
+
+export interface HomePageCartProps {
+    setCartClicked: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 
 const HomePage = () => {
@@ -52,6 +56,7 @@ const HomePage = () => {
                 navigate('/auth/login');
             }
             setCartClicked(true)
+            navigate(`?id=${id}`)
         } catch (error) {
             throw error
         }
@@ -253,7 +258,7 @@ const HomePage = () => {
                         </div>
 
                         <div className="fixed top-1/2 -translate-y-1/2 left-1/2 z-3 -translate-x-1/2 text-justify p-4 h-[60vh] w-[90vw] font-bold text-xl title-header bg-black/20 rounded-xl">
-                            <CustomerAddToCartPage/>
+                            <CustomerAddToCartPage setCartClicked={setCartClicked}/>
                         </div>
                     </>
                 }

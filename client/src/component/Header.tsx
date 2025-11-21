@@ -19,7 +19,7 @@ const HeaderComponent = () => {
     }
 
     const handleCartClick = () => {
-
+        navigate('/customer/cart')
     }
 
     useEffect(() => {

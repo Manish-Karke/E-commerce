@@ -25,7 +25,11 @@ class CartService {
     }
 
     listCart = async (data) => {
-        const cartList = await CartModel.find(data);
+        const cartList = await CartModel.find(data)
+            .populate('items.product')
+            .populate('user')
+            .populate('coupon')
+
         return cartList
     }
 
@@ -69,9 +73,14 @@ class CartService {
     }
 
     updateCart = async (data, filter) => {
-        const cartDetails = await CartModel.findByIdAndUpdate(data, filter, { new: true });
+        try {
+            console.log(data, filter)
+            const cartDetails = await CartModel.findByIdAndUpdate(data, filter, { new: true });
 
-        return cartDetails
+            return cartDetails
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     deleteCart = async (data) => {

@@ -27,6 +27,7 @@ import SellerUpdatePage from "../module/Seller/SellerUpdatePage"
 import SellerProductViewPage from "../module/Seller/SellerProductViewPage"
 import SellerDashboardPage from "../module/Seller/SellerDashboardPage"
 import SellerViewCategoryPage from "../module/Seller/SellerViewCategory"
+import CustomerCartPage from "../module/Cusomter/Cart/CustomerCartPage"
 
 const router = createBrowserRouter([
     {
@@ -40,8 +41,9 @@ const router = createBrowserRouter([
                             { index: true, Component: ProductViewPage },
                         ]
                     },
-                ]
+                ], 
             },
+            {path: 'customer/cart', Component: CustomerCartPage},
             {
                 path: '/auth', Component: AuthLayoutPage, children: [
                     { path: 'login', Component: LoginPage },
