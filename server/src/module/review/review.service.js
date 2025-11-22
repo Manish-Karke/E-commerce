@@ -23,7 +23,7 @@ class ReviewService {
       throw error;
     }
   };
-  
+
   getAllReview = async () => {
     try {
       const getAllReview = await ReviewModel.find()
@@ -61,4 +61,4 @@ class ReviewService {
 }
 
 const reviewSvc = new ReviewService();
-module.exports = new reviewSvc();
+module.exports = reviewSvc;

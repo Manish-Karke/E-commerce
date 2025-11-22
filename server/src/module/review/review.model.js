@@ -4,8 +4,8 @@ const ReviewSchema = new mongoose.Schema(
   {
     product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    rating: { type: Number, min: 1, max: 5 },
-    body: String,
+    rating: { type: Number, min: 0, max: 5, default: 0 },
+    body: { type: String, default: " " },
   },
   { timestamps: true }
 );

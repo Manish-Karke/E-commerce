@@ -4,6 +4,18 @@ const reviewSvc = require("./review.service");
 class ReviewController {
   createReview = async (req, res, next) => {
     try {
+      const { id } = req.params;
+      let body = req.body;
+
+      body.product = id;
+
+      if (req.loggedInUser.isBan === true) {
+        throw {
+          code: 402,
+          status: "you are banned",
+          message: "contact to admin",
+        };
+      }
       if (req.loggedInUser.isVerified === false) {
         throw {
           code: 402,
@@ -12,15 +24,10 @@ class ReviewController {
             "Since your account is not verified, you cannot create the review",
         };
       }
-      if (req.loggedInUser.isBan === true) {
-        throw {
-          code: 402,
-          status: "you are banned",
-          message: "contact to admin",
-        };
-      }
 
-      const createReviews = await reviewSvc.createReview(req);
+      body.user = req.loggedInUser._id;
+
+      const createReviews = await reviewSvc.createReview(body);
 
       res.json({
         data: createReviews,
@@ -35,7 +42,7 @@ class ReviewController {
 
   listSingleReview = async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const {id }= req.params;
 
       const reviews = await reviewSvc.getSingleReview({ _id: id });
       //need to check for id
@@ -47,7 +54,7 @@ class ReviewController {
         };
       }
       res.json({
-        data: createReviews,
+        data: reviews,
         code: 200,
         status: "review has been created",
         message: "your review is added",
@@ -59,7 +66,7 @@ class ReviewController {
 
   listReview = async (req, res, next) => {
     try {
-      const getAllReview = await reviewSvc.getReview();
+      const getAllReview = await reviewSvc.getAllReview();
 
       res.json({
         data: getAllReview,
