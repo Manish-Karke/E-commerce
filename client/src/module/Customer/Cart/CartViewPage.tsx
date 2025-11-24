@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react"
-import publicSvc from "../../service/public.service"
 import { useNavigate, useParams } from "react-router-dom"
 import { FaCaretLeft, FaCaretRight } from "react-icons/fa"
 import { Rate } from "antd"
@@ -7,10 +6,12 @@ import { GoFoldUp, GoPlus } from "react-icons/go"
 import ReactMarkdown from 'react-markdown'
 import remarkBreaks from "remark-breaks"
 import { MdOutlineArrowCircleLeft } from "react-icons/md"
-import type { ProductDetailsInterface } from "../ProductPage/product.validation"
+import type { ProductDetailsInterface } from "../../ProductPage/product.validation"
+import publicSvc from "../../../service/public.service"
 
-const SellerProductViewPage = () => {
+const CartViewPage = () => {
     const { id } = useParams<{ id: string }>()
+    console.log(id)
 
     const [productDetails, setProductDetails] = useState<ProductDetailsInterface>({} as ProductDetailsInterface)
     const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -37,7 +38,7 @@ const SellerProductViewPage = () => {
 
     const backNavigate = () => {
         try {
-            navigate('/seller/product');
+            navigate('/customer/cart');
         } catch (error) {
             throw error
         }
@@ -59,12 +60,12 @@ const SellerProductViewPage = () => {
         <>
             {!isLoading &&
                 <>
-                    <div className="flex w-full h-[70vh] relative overflow-clip">
+                    <div className="flex w-full h-[50vh] relative">
                         <div className="absolute top-3 left-2">
-                            <MdOutlineArrowCircleLeft className="text-4xl md:text-6xl" onClick={() => backNavigate()} />
+                            <MdOutlineArrowCircleLeft size={35} onClick={() => backNavigate()} />
                         </div>
-                        <div className="flex w-full h-[70vh] items-center justify-center">
-                            <img src={productDetails.images[imagesIndex].secure_url} alt="" className="md:h-[70vh] md:w-auto" />
+                        <div className="flex w-full h-[45vh] items-center justify-center">
+                            <img src={productDetails.images[imagesIndex].secure_url} alt="" />
                         </div>
                         <div className="flex items-center justify-center absolute bottom-0 w-full h-[8vh] bg-gray-200/50 rounded-b-xl gap-3">
                             {productDetails.images?.map((items, index) => (
@@ -88,20 +89,20 @@ const SellerProductViewPage = () => {
                             <FaCaretRight size={35} />
                         </div>
                     </div>
-                    <div className="flex flex-col rounded-xl md:h-[20vh] shrink-0">
-                        <div className="flex flex-col rounded-t-xl md:h-[14vh] md:bg-gray-200">
-                            <div className="flex flex-col w-full h-auto header-title bg-gray-200 px-2 pt-2 text-xl rounded-t-xl md:text-2xl">
+                    <div className="flex flex-col rounded-xl">
+                        <div className="flex flex-col rounded-t-xl">
+                            <div className="flex flex-col w-full h-auto header-title bg-gray-200 px-2 pt-2 text-xl rounded-t-xl">
                                 {productDetails.title}
                             </div>
-                            <div className="flex bg-gray-200 px-2 text-xl header-title md:text-2xl">
+                            <div className="flex bg-gray-200 px-2 text-xl header-title">
                                 {productDetails.category.length > 0 ? productDetails.category[0].name : ""}
                             </div>
-                            <div className="flex w-full md:text-xl h-[5vh] md:h-[7vh] items-center bg-gray-200 p-2 gap-2 text-base text-gray-700">
+                            <div className="flex w-full h-[5vh] items-center bg-gray-200 p-2 gap-2 text-base text-gray-700">
                                 <Rate className="custom-rate" value={productDetails.rating} />
                                 ({productDetails.totalReviews} Reviewers)
                             </div>
                         </div>
-                        <div className="flex w-full h-[5vh] md:h-[7vh] items-center bg-gray-200 rounded-b-xl">
+                        <div className="flex w-full h-[5vh] items-center bg-gray-200 rounded-b-xl">
                             <div className="flex w-auto p-2 text-3xl bg-gray-200 items-center justify-center header-title rounded-b-xl">
                                 {productDetails.currency}
                                 {`  `}
@@ -113,14 +114,14 @@ const SellerProductViewPage = () => {
                         </div>
                     </div>
                     <div className={`
-                        flex w-full h-[7vh] bg-gray-200 p-2 items-center px-4 gap-4 text-gray-700 rounded-xl mt-3 md:text-2xl
+                        flex w-full h-[7vh] bg-gray-200 p-2 items-center px-4 gap-4 text-gray-700 rounded-xl mt-3
                     `}>
-                        <GoPlus onClick={() => setShowDescription(true)} className={`text-3xl md:text-5xl ${showDescription ? "hidden rounded-t-xl" : "rounded-xl"}`} />
+                        <GoPlus size={25} onClick={() => setShowDescription(true)} className={`${showDescription ? "hidden rounded-t-xl" : "rounded-xl"}`} />
                         Description
                     </div>
                     {showDescription ?
                         <div className="flex flex-col text-justify p-2 bg-gray-200 w-full h-auto gap-5 px-4 items-center justify-center">
-                            <div className="flex flex-col gap-2 md:text-xl">
+                            <div className="flex flex-col gap-2">
                                 <ReactMarkdown remarkPlugins={[remarkBreaks]}>{productDetails.description}</ReactMarkdown>
                             </div>
                             <GoFoldUp size={35} className="animate-bounce" onClick={() => setShowDescription(false)} />
@@ -128,7 +129,7 @@ const SellerProductViewPage = () => {
                         : <></>}
                     <div className="flex w-full h-auto rounded-xl mt-4 items-center justify-center">
                         <div className="flex flex-col">
-                            <h1 className="flex header-title text-xl md:text-2xl">PRODUCT REVIEWS</h1>
+                            <h1 className="flex header-title text-xl">PRODUCT REVIEWS</h1>
                             <div className="flex flex-col w-full mt-4 gap-5">
                                 <div className="flex flex-col w-full gap-2 items-center justify-center overflow-hidden">
 
@@ -137,7 +138,7 @@ const SellerProductViewPage = () => {
                                     <span className='flex border border-t grow border-gray-500'></span>
                                 </div>
                                 <div className='flex w-full items-center justify-center mb-6'>
-                                    <button className='border-2 border-gray-500 p-2 rounded-xl w-[25vw] md:text-2xl'>
+                                    <button className='border-2 border-gray-500 p-2 rounded-xl w-[25vw]'>
                                         More
                                     </button>
                                 </div>
@@ -150,4 +151,4 @@ const SellerProductViewPage = () => {
     )
 }
 
-export default SellerProductViewPage
+export default CartViewPage

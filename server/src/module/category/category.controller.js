@@ -5,8 +5,6 @@ const mongoose = require('mongoose')
 class CategoryController {
     createCategory = async (req, res, next) => {
         try {
-            console.log(req.body, req.file)
-
             const transformedData = await categorySvc.transformedCategoryData(req)
 
             const categoryDetails = await categorySvc.saveCategory(transformedData);
@@ -35,7 +33,7 @@ class CategoryController {
             const { categoryList, options } = await categorySvc.listCategory(filter);
 
             res.json({
-                data: (categoryList.length === 0) ? "No category found" : categoryList,
+                data: categoryList,
                 code: 200,
                 status: "Category List fetched",
                 message: "Category List has been fetched",
@@ -69,7 +67,7 @@ class CategoryController {
             });
 
             res.json({
-                data: (productList.length === 0) ? "No product found" : productList,
+                data: productList,
                 code: 200,
                 status: "Product list fetched",
                 message: "Product details fetched successsfully"
@@ -131,7 +129,6 @@ class CategoryController {
     updateCategoryById = async (req, res, next) => {
         try {
             const { id } = req.params
-            console.log(id)
 
             let filter = {
                 _id: id
@@ -148,7 +145,6 @@ class CategoryController {
             }
 
             const updateCategoryDetails = await categorySvc.updateTransformCategoryData(req);
-            console.log("frontend", updateCategoryDetails)
 
             const updatedCategory = await categorySvc.saveUpdatedCategory(id, {$set: updateCategoryDetails});
 

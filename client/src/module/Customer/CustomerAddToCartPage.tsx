@@ -1,39 +1,28 @@
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Controller, useForm } from "react-hook-form"
-import { CartValidationDTO, type cartValidationProps } from "../customer.validator"
+import { CartValidationDTO, type cartValidationProps } from "./customer.validator"
 import { InputNumber } from "antd"
 import { useNavigate, useSearchParams } from "react-router-dom"
 import { useCallback, useEffect, useState } from "react"
+import publicSvc from "../../service/public.service"
+import type { ListProductDetails } from "../HomePage/homepage.validation"
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai"
 import { ImSpinner9 } from "react-icons/im"
-import type { HomePageCartProps } from "../../HomePage/HomePage"
-import customerSvc from "../../../service/customer.service"
-import type { CartDetails } from "./cart.validation"
+import type { HomePageCartProps } from "../HomePage/HomePage"
+import customerSvc from "../../service/customer.service"
 
-const CartUpdatePage = ({ setCartClicked }: HomePageCartProps) => {
+const CustomerAddToCartPage = ({ setCartClicked }: HomePageCartProps) => {
     const [searchParams] = useSearchParams();
     const productId = searchParams.get('id')
-    const [cartDetails, setCartDetails] = useState<CartDetails | null>(null)
+    const [productDetails, setProductDetails] = useState<ListProductDetails | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [quantity, setQuantity] = useState<number>(1)
     const navigate = useNavigate();
 
-    const { control, handleSubmit, formState: { isSubmitting }, setValue } = useForm({
-        defaultValues: {
-            items: {
-                quantity: 1
-            },
-            coupon: ''
-        },
-        resolver: yupResolver(CartValidationDTO),
-        mode: "onSubmit"
-    })
-    
     const fetchProductDetails = useCallback(async (id: string) => {
         try {
-            const response = await customerSvc.getSingleCartById(id);
-            setCartDetails(response.data.data)
-            setQuantity(response.data.data.items.quantity)
+            const response = await publicSvc.getProductById(id);
+            setProductDetails(response.data.data)
         } catch (error) {
             console.log(error)
         } finally {
@@ -47,9 +36,20 @@ const CartUpdatePage = ({ setCartClicked }: HomePageCartProps) => {
         }
     }, [productId])
 
+    const { control, handleSubmit, formState: { isSubmitting }, setValue } = useForm({
+        defaultValues: {
+            items: {
+                quantity: 1
+            },
+            coupon: ''
+        },
+        resolver: yupResolver(CartValidationDTO),
+        mode: "onSubmit"
+    })
+
     const onSubmit = async (data: cartValidationProps, id: string) => {
         try {
-            await customerSvc.updateCartById(id, data)
+            await customerSvc.addToCart(data, id)
             setCartClicked(false)
         } catch (error) {
             console.log(error)
@@ -57,27 +57,25 @@ const CartUpdatePage = ({ setCartClicked }: HomePageCartProps) => {
         }
     }
 
-    console.log('asdfasdfa', cartDetails)
-
     return (
         <>
             {!isLoading &&
                 <div className="flex flex-col shrink-0 h-full w-full p-2 bg-gray-50 rounded-md">
                     <div className="flex items-center justify-center w-full h-[10vh] shrink-0 bg-amber-500 rounded-md">
                         <h2 className="flex p-3 text-start">
-                            {cartDetails?.items.product.title}
+                            {productDetails?.title}
                         </h2>
                     </div>
-                    <div className="flex w-full h-[5vh] shrink-0 mt-5">
+                    <div className="flex w-full h-[5vh] shrink-0 mt-[5vh]">
                         <h2 className="flex gap-2 text-2xl items-center justify-center">
-                            Price:  {cartDetails?.items.product.currency}  {(cartDetails?.items.product.price ?? 0) / 100}
+                            Price:  {productDetails?.currency}  {(productDetails?.price ?? 0) / 100}
                         </h2>
                     </div>
                     <form onSubmit={handleSubmit((data) => onSubmit(data, productId!))} className="flex flex-col w-full h-full shrink-0 p-2">
                         <div className="flex flex-col w-full h-auto shirnk-0 p-2 items-center justify-center gap-10">
                             <div className="flex flex-col w-full gap-3">
                                 <span className="flex text-lg">
-                                    Product Stock: {cartDetails?.items.product.stock}
+                                    Items Quantity: {productDetails?.stock}
                                 </span>
                                 <div className="flex w-full gap-2">
                                     <button type="button" onClick={() => {
@@ -93,7 +91,7 @@ const CartUpdatePage = ({ setCartClicked }: HomePageCartProps) => {
                                             <InputNumber
                                                 {...field}
                                                 min={1}
-                                                max={cartDetails?.items.product.stock}
+                                                max={productDetails?.stock}
                                                 placeholder="Enter the quantity?"
                                                 style={{ width: '100%', alignContent: 'center' }}
                                                 className="flex h-[5vh] bg-red-500"
@@ -108,7 +106,7 @@ const CartUpdatePage = ({ setCartClicked }: HomePageCartProps) => {
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            const maxStock = cartDetails?.items.product.stock ?? 1
+                                            const maxStock = productDetails?.stock ?? 1
                                             const newValue = Math.min(maxStock, quantity + 1)
                                             setQuantity(newValue)
                                             setValue('items.quantity', newValue)
@@ -119,20 +117,20 @@ const CartUpdatePage = ({ setCartClicked }: HomePageCartProps) => {
                                 </div>
                                 <div className="flex gap-2 flex-col mt-4">
                                     <h3>
-                                        Total: {quantity * (cartDetails?.items.product.price ?? 0) / 100}
+                                        Total: {quantity * (productDetails?.price ?? 0) / 100}
                                     </h3>
                                     <h3>
-                                        Tax @13%: {quantity * (cartDetails?.items.product.price ?? 0) * 0.13 / 100}
+                                        Tax @13%: {quantity * (productDetails?.price ?? 0) * 0.13 / 100}
                                     </h3>
                                     <h3>
-                                        Total with Tax@13%: {quantity * (cartDetails?.items.product.price ?? 0) / 100 + quantity * (cartDetails?.items.product.price ?? 0) * 0.13 / 100}
+                                        Total with Tax@13%: {quantity * (productDetails?.price ?? 0) / 100 + quantity * (productDetails?.price ?? 0) * 0.13 / 100}
                                     </h3>
                                 </div>
                             </div>
                             <div className="flex gap-2 w-full ">
                                 {!isSubmitting &&
                                     <button type="submit" className="flex bg-amber-500 rounded-md w-full h-[6vh] text-white header-title items-center justify-center">
-                                        Update Cart
+                                        Add To Cart
                                     </button>
                                 }
                                 {isSubmitting &&
@@ -141,7 +139,7 @@ const CartUpdatePage = ({ setCartClicked }: HomePageCartProps) => {
                                     </button>
                                 }
                                 <button onClick={() => {
-                                    navigate('/customer/cart')
+                                    navigate('/v1/home')
                                     setCartClicked(false)
                                 }} className="flex bg-amber-500 rounded-md w-full h-[6vh] text-white header-title items-center justify-center">
                                     Cancel
@@ -155,4 +153,4 @@ const CartUpdatePage = ({ setCartClicked }: HomePageCartProps) => {
     )
 }
 
-export default CartUpdatePage;
+export default CustomerAddToCartPage;

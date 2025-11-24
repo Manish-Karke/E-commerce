@@ -48,8 +48,6 @@ class CartService {
             let actualQuantity = 0
 
             if (data.items) {
-                console.log("this is running")
-
                 actualQuantity = data.items.quantity - oldData.items.quantity
                 data.items.price = productDetails.price * 100 * data.items.quantity;
                 data.items.product = productDetails._id
@@ -74,7 +72,6 @@ class CartService {
 
     updateCart = async (data, filter) => {
         try {
-            console.log(data, filter)
             const cartDetails = await CartModel.findByIdAndUpdate(data, filter, { new: true });
 
             return cartDetails

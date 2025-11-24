@@ -4,10 +4,7 @@ const bannerSvc = require("./banner.service");
 class BannerContoller {
     createBanner = async(req, res, next) => {
         try {
-            console.log(req.body, req.file)
             const transformedBannerData = await bannerSvc.transformedBannerData(req) 
-
-            console.log(transformedBannerData);
 
             const bannerDetails = await bannerSvc.saveBanner(transformedBannerData);
 

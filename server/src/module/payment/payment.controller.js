@@ -5,7 +5,7 @@ const paymentSvc = require("./payment.service");
 class PaymentController {
     savePayment = async (req, res, next) => {
         try {
-            const data = req.query;
+            const data = req.body;
             let filter = {}
             const keys = [ "pidx", "transaction_id", "tidx", "txnId", "amount", "total_amount", "mobile", "status", "purchase_order_id", "purchase_order_name"]
 

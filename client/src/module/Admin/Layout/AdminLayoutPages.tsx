@@ -10,26 +10,32 @@ const AdminLayoutPage = () => {
     const [viewUser, setViewUser] = useState<boolean>(false)
     const [vh, setVh] = useState<number>()
     const [vw, setVw] = useState<number>()
-    const {loggedInUser} = useAppContext();
+    const {loggedInUser, setLoggedInUser} = useAppContext();
 
     useEffect(() => {
         setVw(() => window.innerWidth)
         setVh(() => window.innerHeight)
     }, [])
 
+    useEffect(() => {
+        if(loggedInUser?.role !== 'admin') {
+            navigate('/v1/home')
+        }
+    }, [])
+
     return (
         <>
             <div style={{ height: `${vh}px`, width: `${vw}px` }} className="flex flex-col p-2">
-                <div className="flex items-center justify-center">
-                    <div className="flex fixed top-2 left-1/2 -translate-x-1/2 w-[98%] h-[8vh] z-50 items-center justify-between gap-4 px-4 text-green-800 bg-black/20 rounded-xl">
-                        <AiOutlineHome onClick={() => navigate('/v1/home')} size={35} />
+                <div className="flex items-center justify-center md:shrink-0">
+                    <div className="flex fixed top-2 left-1/2 -translate-x-1/2 w-[98%] h-[8vh] md:h-[10vh] z-50 items-center justify-between gap-4 px-4 text-green-800 bg-black/20 rounded-xl">
+                        <AiOutlineHome onClick={() => navigate('/v1/home')} className="text-4xl md:text-6xl " />
                         <div className="flex h-[3vh] w-[27vw]" onClick={() => navigate('/admin')}>
                             <img src={Logo} alt="" />
                         </div>
-                        <FaRegCircleUser size={35} onClick={() => setViewUser(true)} />
+                        <FaRegCircleUser className="text-4xl md:text-6xl " onClick={() => setViewUser(true)} />
                     </div>
                 </div>
-                <div className="flex w-full h-[9vh] shrink-0"></div>
+                <div className="flex w-full h-[9vh] shrink-0 md:h-[12vh]"></div>
                 <div className="relative w-full h-full">
                     {/* Outlet area (main content) */}
                     <div
@@ -51,7 +57,7 @@ const AdminLayoutPage = () => {
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <div className="flex flex-col items-center justify-center">
-                                    <AiOutlineUser size={45} />
+                                    <AiOutlineUser className="text-5xl md:text-7xl" />
                                     <h2 className="text-xl font-semibold mb-2 header-title">{loggedInUser?.name}</h2>
                                     <h3 className="text-xl font-semibold mb-2 header-title">{loggedInUser?.email}</h3>
                                 </div>
@@ -60,15 +66,16 @@ const AdminLayoutPage = () => {
                                     <div className="flex gap-5">
                                         <button
                                             onClick={() => {
+                                                navigate('/v1/home')
                                                 localStorage.clear();
-                                                navigate('/')
+                                                setLoggedInUser(null)
                                             }}
-                                            className="mt-3 bg-green-700 text-white px-3 py-1 rounded-lg w-[50%] h-[5vh]">
+                                            className="mt-[3vh] bg-green-700 text-white px-3 py-1 rounded-lg w-[50%] h-[5vh]">
                                             YES
                                         </button>
                                         <button
                                             onClick={() => setViewUser(false)}
-                                            className="mt-3 bg-green-700 text-white px-3 py-1 rounded-lg w-[50%] h-[5vh]"
+                                            className="mt-[3vh] bg-green-700 text-white px-3 py-1 rounded-lg w-[50%] h-[5vh]"
                                         >
                                             NO
                                         </button>

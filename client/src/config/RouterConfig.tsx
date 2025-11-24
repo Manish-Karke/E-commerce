@@ -19,7 +19,6 @@ import AdminCouponPage from "../module/Admin/Coupon/AdminCouponPage"
 import AdminUserPage from "../module/Admin/AdminUsersPage"
 import AdminDashboardPage from "../module/Admin/AdminDashboardPage"
 import AdminUserViewPage from "../module/Admin/AdminUserViewPage"
-import AuthenticateUserPage from "../module/AuthPage/AuthenticateUserPage"
 import AdminBannerCreatePage from "../module/Admin/Banner/AdminBannerCreatePage"
 import SellerLayoutPage from "../module/Seller/Layout/SellerLayoutPage"
 import SellerPage from "../module/Seller/SellerPage"
@@ -27,73 +26,78 @@ import SellerUpdatePage from "../module/Seller/SellerUpdatePage"
 import SellerProductViewPage from "../module/Seller/SellerProductViewPage"
 import SellerDashboardPage from "../module/Seller/SellerDashboardPage"
 import SellerViewCategoryPage from "../module/Seller/SellerViewCategory"
-import CustomerCartPage from "../module/Cusomter/Cart/CustomerCartPage"
+import CustomerCartPage from "../module/Customer/Cart/CustomerCartPage"
+import CustomerLayoutPage from "../module/Customer/Layout/CustomerLayout"
+import CartViewPage from "../module/Customer/Cart/CartViewPage"
+import CustomerOrderItemsPage from "../module/Customer/OrderItem/OrderItemsPage"
+import PageNotFound from "../module/PageNotFound"
 
 const router = createBrowserRouter([
     {
-        path: '/', Component: AuthenticateUserPage, children: [
+        path: '/v1', Component: HomePageLayout, children: [
+            { path: 'home', Component: HomePage },
+            {path: 'page-not-found', Component: PageNotFound},
             {
-                path: '/v1', Component: HomePageLayout, children: [
-                    { index: true, Component: HomePage },
-                    { path: 'home', Component: HomePage },
-                    {
-                        path: 'product/:id', Component: ProductViewLayout, children: [
-                            { index: true, Component: ProductViewPage },
-                        ]
-                    },
-                ], 
-            },
-            {path: 'customer/cart', Component: CustomerCartPage},
+                path: 'product/:id', Component: ProductViewLayout, children: [
+                    { index: true, Component: ProductViewPage },
+                ]
+            }
+        ],
+    },
+    {
+        path: 'customer', Component: CustomerLayoutPage, children: [
+            { path: 'cart', Component: CustomerCartPage },
+            { path: 'orders', Component: CustomerOrderItemsPage },
+            { path: 'cart/cartView/:id', Component: CartViewPage },
+            { path: 'cart/khalti-success', Component: CustomerCartPage },
+        ]
+    },
+    {
+        path: '/auth', Component: AuthLayoutPage, children: [
+            { path: 'login', Component: LoginPage },
+            { path: 'register', Component: RegisterPage },
+            { path: 'forget-password', Component: ForgetPassword },
+            { path: 'reset-password', Component: ResetPassword }
+        ],
+    },
+    {
+        path: '/admin', Component: AdminLayoutPage, children: [
+            { index: true, Component: AdminDashboardPage },
             {
-                path: '/auth', Component: AuthLayoutPage, children: [
-                    { path: 'login', Component: LoginPage },
-                    { path: 'register', Component: RegisterPage },
-                    { path: 'forget-password', Component: ForgetPassword },
-                    { path: 'reset-password', Component: ResetPassword }
-                ],
-            },
-            {
-                path: '/admin', Component: AdminLayoutPage, children: [
-                    {
-                        index: true, Component: AdminDashboardPage
-                    },
-                    {
-                        path: 'category', Component: AdminCategoryPage, children: [
-                            { path: 'update/:id', Component: AdminCategoryUpdatePage }
-                        ]
-                    },
-                    {
-                        path: 'banner', Component: AdminBannerPage, children: [
-                            { path: 'create', Component: AdminBannerCreatePage },
-                            { path: 'update/:id', Component: AdminBannerUpdatePage }
-                        ]
-                    },
-                    { path: 'product', Component: AdminProductPage },
-                    {
-                        path: 'coupon', Component: AdminCouponPage, children: [
-                            { path: 'update/:id', Component: AdminCouponUpdatePage }
-                        ]
-                    },
-                    {
-                        path: 'users', Component: AdminUserPage, children: [
-                            { path: 'view/:id', Component: AdminUserViewPage }
-                        ]
-                    }
+                path: 'category', Component: AdminCategoryPage, children: [
+                    { path: 'update/:id', Component: AdminCategoryUpdatePage }
                 ]
             },
             {
-                path: '/seller', Component: SellerLayoutPage, children: [
-                    { index: true, Component: SellerDashboardPage },
-                    { path: 'category/view', Component: SellerViewCategoryPage },
-                    {
-                        path: 'product', Component: SellerPage, children: [
-                            { path: 'update/:id', Component: SellerUpdatePage },
-                            { path: 'view/:id', Component: SellerProductViewPage }
-                        ]
-                    },
-                ],
+                path: 'banner', Component: AdminBannerPage, children: [
+                    { path: 'create', Component: AdminBannerCreatePage },
+                    { path: 'update/:id', Component: AdminBannerUpdatePage }
+                ]
             },
+            { path: 'product', Component: AdminProductPage },
+            {
+                path: 'coupon', Component: AdminCouponPage, children: [
+                    { path: 'update/:id', Component: AdminCouponUpdatePage }
+                ]
+            },
+            {
+                path: 'users', Component: AdminUserPage, children: [
+                    { path: 'view/:id', Component: AdminUserViewPage }
+                ]
+            }
         ]
+    },
+    {
+        path: '/seller', Component: SellerLayoutPage, children: [
+            { index: true, Component: SellerDashboardPage },
+            { path: 'category/view', Component: SellerViewCategoryPage },
+            {
+                path: 'product', Component: SellerPage, children: [
+                    { path: 'update/:id', Component: SellerUpdatePage },
+                    { path: 'view/:id', Component: SellerProductViewPage }
+                ]
+            },
+        ],
     },
 ])
 

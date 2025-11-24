@@ -135,9 +135,6 @@ const SellerUpdatePage = () => {
                     formData.append('images', file.originFileObj as File)
                 })
             }
-
-            console.log(...formData.entries())
-
             await sellerSvc.updateCategory(id, formData);
             navigate('/seller/product')
         } catch (err) {

@@ -36,3 +36,11 @@ h2,
   color: #d4af37;
   filter: brightness(100%);
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

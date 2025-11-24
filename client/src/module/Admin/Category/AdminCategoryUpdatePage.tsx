@@ -109,11 +109,11 @@ const AdminCategoryUpdatePage = () => {
         <>
             {!isLoading &&
                 <div className="felx flex-col">
-                    <p className="flex text-lg w-full mb-3">
+                    <p className="flex text-lg w-full mb-3 md:text-2xl">
                         Update Cateogry
                     </p>
                     <form onSubmit={handleSubmit(() => onSubmit(id))} className="flex w-full">
-                        <div className="flex flex-col gap-5 w-full">
+                        <div className="flex flex-col gap-5 w-full md:w-[90vh]">
                             <div className="flex flex-col h-[20vh] w-full justify-center">
                                 <div className='flex flex-col relative h-[9vh] shrink-0'>
                                     <Controller
@@ -167,16 +167,16 @@ const AdminCategoryUpdatePage = () => {
                             </div>
                             <div className="flex flex-col w-full gap-4">
                                 {!isSubmitting &&
-                                    <button type="submit" className="flex w-full bg-green-950 text-white header-title items-center justify-center rounded-md h-[6vh]">
+                                    <button type="submit" className="flex w-full md:text-2xl md:h-[7vh] bg-green-950 text-white header-title items-center justify-center rounded-md h-[6vh]">
                                         UPDATE BANNER
                                     </button>
                                 }
                                 {isSubmitting &&
-                                    < div className="flex w-full bg-green-950 h-full text-white header-title items-center justify-center rounded-md">
+                                    < div className="flex w-full md:text-2xl md:h-[7vh] bg-green-950 h-full text-white header-title items-center justify-center rounded-md">
                                         <ImSpinner9 className="animate-spin" />
                                     </div>
                                 }
-                                <button onClick={() => navigate('/admin/category')} className="flex w-full bg-gray-500 h-[6vh] text-white header-title items-center justify-center rounded-md">
+                                <button onClick={() => navigate('/admin/category')} className="flex w-full md:text-2xl md:h-[7vh] bg-gray-500 h-[6vh] text-white header-title items-center justify-center rounded-md">
                                     CANCEL UPDATE
                                 </button>
                             </div>

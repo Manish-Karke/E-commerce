@@ -77,14 +77,14 @@ const AdminCouponUpdatePage = () => {
         <>
             {!isLoading &&
                 <>
-                    <p className="flex text-lg w-full mb-3">
+                    <p className="flex text-lg w-full mb-3 md:text-3xl">
                         Update Coupon
                     </p>
                     <form onSubmit={handleSubmit(() => onSubmit(id!))} className="flex w-full h-auto">
                         <div className="flex flex-col gap-5 w-full h-auto">
                             <div className="flex flex-col w-full justify-center">
                                 <div className='flex flex-col relative h-[9vh] shirnk-0'>
-                                    <p className="text-lg px-2">Coupon Type</p>
+                                    <p className="text-lg px-2 md:text-2xl">Coupon Type</p>
                                     <Controller
                                         name='discountType'
                                         control={control}
@@ -105,7 +105,7 @@ const AdminCouponUpdatePage = () => {
                                     </div>
                                 </div>
                                 <div className='flex flex-col relative h-[12vh] shink-0'>
-                                    <p className="text-lg px-2">Coupon Discount Value</p>
+                                    <p className="text-lg px-2 md:text-2xl">Coupon Discount Value</p>
                                     <Controller
                                         name='discountValue'
                                         control={control}
@@ -121,8 +121,8 @@ const AdminCouponUpdatePage = () => {
                                         {errors.discountValue?.message}
                                     </div>
                                 </div>
-                                <div className='flex relative h-[9vh] w-full shrink-0 justify-between'>
-                                    <div className="flex flex-col relative">
+                                <div className='flex relative h-[9vh] md:gap-5 w-full shrink-0 justify-between'>
+                                    <div className="flex flex-col relative w-full">
                                         <Controller
                                             name='validFrom'
                                             control={control}
@@ -138,7 +138,7 @@ const AdminCouponUpdatePage = () => {
                                             {errors.validFrom?.message}
                                         </div>
                                     </div>
-                                    <div>
+                                    <div className=" w-full">
                                         <Controller
                                             name='validUntil'
                                             control={control}

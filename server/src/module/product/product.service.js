@@ -7,7 +7,7 @@ class ProductService {
             const userDetails = new ProductModel(data);
             return await userDetails.save();
         } catch (error) {
-            console.log('Chekcing for the error here0', error)
+            console.log('Error', error)
             throw error
         }
     }
@@ -29,7 +29,6 @@ class ProductService {
                 data.images = await Promise.all(imagePromise)
             }
 
-            console.log(data.images)
 
             return data;
         } catch (error) {
@@ -41,8 +40,6 @@ class ProductService {
         let page = parseInt(req.query.page) || 1
         let limit = parseInt(req.query.limit) || 6
         let offset = (page - 1) * limit
-
-        console.log(data)
 
         const productList = await ProductModel.find(data)
             .populate('category')

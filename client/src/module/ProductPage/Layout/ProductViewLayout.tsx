@@ -21,7 +21,7 @@ const ProductViewLayout = () => {
 
     return (
         <>
-            <div style={{ width: `${vw}px`, height: `${vh}px` }} className={`flex flex-col`}>
+            <div style={{ width: `${vw}px`, height: `${vh}px` }} className={`flex flex-col lg:px-60`}>
                 <Outlet/>
             </div>
         </>

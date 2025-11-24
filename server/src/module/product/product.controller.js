@@ -20,7 +20,6 @@ class ProductController {
             }
 
             const transformedData = await productSvc.transformSellerData(req);
-            console.log('Chiecing transofrmation', transformedData)
 
             const productDetails = await productSvc.createProduct(transformedData)
 
@@ -146,8 +145,6 @@ class ProductController {
                 id
                 , { $set: transformedProductData });
 
-            console.log(updatedData)
-
             res.json({
                 data: updatedData,
                 code: 200,
@@ -187,6 +184,7 @@ class ProductController {
             throw error
         }
     }
+
 }
 
 const productCtrl = new ProductController();
