@@ -9,7 +9,7 @@ const CustomerLayoutPage = () => {
     return (
         <>
             <HeaderComponent/>
-            <div style={{width: `${vw}px`, height: `${vh}px`}} className={`flex flex-col ${searchClick ? "" : "mt-[8vh]"}`}>
+            <div style={{width: `${vw}`, height: `${vh}`}} className={`flex flex-col overflow-x-clip ${searchClick ? "" : "mt-[8vh]"}`}>
                 <Outlet/>
             </div>
         </>

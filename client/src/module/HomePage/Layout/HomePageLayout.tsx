@@ -7,7 +7,6 @@ const HomePageLayout = () => {
     const [vw, setVw] = useState<Number>(0)
     const { menuClick } = useAppContext()
     const [isLoading, setIsLoading] = useState(true)
-    const navigate = useNavigate();
 
     function setViewportHeight() {
         setVh(window.innerHeight);
@@ -21,14 +20,13 @@ const HomePageLayout = () => {
         setViewportHeight();
         setViewportWidth();
         setIsLoading(false)
-        navigate('home')
     }, [])
 
     return (
         <>
             {!isLoading &&
-                <div style={{ width: `${vw}px`, height: `${vh}px` }} className={`flex flex-col ${menuClick && ""}`}>
-                    <Outlet />
+                <div style={{height: `${window.innerHeight}`, width: `${window.innerWidth}`}} className={`flex flex-col items-center justify-center overflow-x-clip ${menuClick && ""}`}>
+                    <Outlet/>
                 </div>
             }
         </>

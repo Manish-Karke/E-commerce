@@ -62,26 +62,26 @@ const CustomerAddToCartPage = ({ setCartClicked }: HomePageCartProps) => {
             {!isLoading &&
                 <div className="flex flex-col shrink-0 h-full w-full p-2 bg-gray-50 rounded-md">
                     <div className="flex items-center justify-center w-full h-[10vh] shrink-0 bg-amber-500 rounded-md">
-                        <h2 className="flex p-3 text-start">
+                        <h2 className="flex p-3 text-start text-base">
                             {productDetails?.title}
                         </h2>
                     </div>
-                    <div className="flex w-full h-[5vh] shrink-0 mt-[5vh]">
-                        <h2 className="flex gap-2 text-2xl items-center justify-center">
+                    <div className="flex w-full h-[5vh] shrink-0 mt-[5vh] md:mt-[1vh]">
+                        <h2 className="flex gap-2 text-base items-center justify-center">
                             Price:  {productDetails?.currency}  {(productDetails?.price ?? 0) / 100}
                         </h2>
                     </div>
                     <form onSubmit={handleSubmit((data) => onSubmit(data, productId!))} className="flex flex-col w-full h-full shrink-0 p-2">
                         <div className="flex flex-col w-full h-auto shirnk-0 p-2 items-center justify-center gap-10">
                             <div className="flex flex-col w-full gap-3">
-                                <span className="flex text-lg">
+                                <span className="flex text-sm">
                                     Items Quantity: {productDetails?.stock}
                                 </span>
                                 <div className="flex w-full gap-2">
                                     <button type="button" onClick={() => {
                                         setQuantity((prev) => Math.max(1, (prev - 1)))
                                         setValue('items.quantity', quantity)
-                                    }} className="border border-gray-300 rounded-md w-[15vw] items-center justify-center flex">
+                                    }} className="border border-gray-300 rounded-md w-[15vw] md:w-[9vw] items-center justify-center flex">
                                         <AiOutlineMinus />
                                     </button>
                                     <Controller
@@ -110,31 +110,31 @@ const CustomerAddToCartPage = ({ setCartClicked }: HomePageCartProps) => {
                                             const newValue = Math.min(maxStock, quantity + 1)
                                             setQuantity(newValue)
                                             setValue('items.quantity', newValue)
-                                        }}
+                                        }} className="border border-gray-300 rounded-md w-[15vw] md:w-[9vw] items-center justify-center flex"
                                     >
                                         <AiOutlinePlus />
                                     </button>
                                 </div>
                                 <div className="flex gap-2 flex-col mt-4">
-                                    <h3>
+                                    <h3 className="text-sm">
                                         Total: {quantity * (productDetails?.price ?? 0) / 100}
                                     </h3>
-                                    <h3>
+                                    <h3 className="text-sm">
                                         Tax @13%: {quantity * (productDetails?.price ?? 0) * 0.13 / 100}
                                     </h3>
-                                    <h3>
+                                    <h3 className="text-sm">
                                         Total with Tax@13%: {quantity * (productDetails?.price ?? 0) / 100 + quantity * (productDetails?.price ?? 0) * 0.13 / 100}
                                     </h3>
                                 </div>
                             </div>
                             <div className="flex gap-2 w-full ">
                                 {!isSubmitting &&
-                                    <button type="submit" className="flex bg-amber-500 rounded-md w-full h-[6vh] text-white header-title items-center justify-center">
+                                    <button type="submit" className="flex bg-amber-500 text-base rounded-md w-full h-[6vh] text-white header-title items-center justify-center">
                                         Add To Cart
                                     </button>
                                 }
                                 {isSubmitting &&
-                                    <button type="submit" className="flex bg-amber-500 rounded-md w-full h-[6vh] text-white header-title items-center justify-center">
+                                    <button type="submit" className="flex bg-amber-500 rounded-md text-base w-full h-[6vh] text-white header-title items-center justify-center">
                                         <ImSpinner9 className="animate-spin" />
                                     </button>
                                 }

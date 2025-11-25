@@ -96,8 +96,8 @@ const HeaderComponent = () => {
                 </div>
             </div>
             {!isShop &&
-                <div className={`flex items-center justify-center  mt-[6vh] ${searchClick ? "h-[9vh] shrink-0" : "hidden"} `}>
-                    <div className="flex w-1/2">
+                <div className={`flex items-center justify-center mt-[6vh] lg:mt-[10vh] ${searchClick ? "h-[9vh] shrink-0" : "hidden"} `}>
+                    <div className="flex w-[90vw]">
                         <Search
                             allowClear
                             size="large"

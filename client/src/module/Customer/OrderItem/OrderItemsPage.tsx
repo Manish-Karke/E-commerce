@@ -114,9 +114,7 @@ const CustomerOrderItemsPage = () => {
                                 </div>
                             ))}
                         </div>
-                        < div className={`
-                    flex flex-col w-full items-center justify-center gap-2 text-base bg-gray-800 text-gray-500 p-2   
-                `} >
+                        < div className={`flex flex-col w-full items-center justify-center gap-2 text-base bg-gray-800 text-gray-500 p-2`} >
                             <ul className="flex flex-col place-items-center gap-2 items-center justify-center">
                                 <li>CUSTOMER SERVICE</li>
                                 <li>COMPANY</li>
