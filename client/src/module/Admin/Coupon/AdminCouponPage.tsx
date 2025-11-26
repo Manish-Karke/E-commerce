@@ -47,7 +47,7 @@ const AdminCouponPage = () => {
                 (
                     isCoupon ?
                         <div className="flex flex-col w-full h-full p-4 gap-4 bg-gray-100 rounded-md ">
-                            <h2 className="text-2xl header-title">
+                            <h2 className="text-2xl header-title md:text-3xl">
                                 Update Coupon
                             </h2>
                             <div className="flex flex-col bg-gray-200 rounded-md p-4 border border-violet-300">
@@ -57,7 +57,7 @@ const AdminCouponPage = () => {
                         <>
                             <div className="flex flex-col w-full h-full">
                                 <div className="flex flex-col w-full h-auto shrink-0 p-4 gap-2 text-xl bg-gray-100 rounded-md">
-                                    <h2 className="flex header-title text-2xl">
+                                    <h2 className="flex header-title text-2xl md:text-3xl">
                                         Coupons
                                     </h2>
                                     <div
@@ -70,19 +70,19 @@ const AdminCouponPage = () => {
                                 </div>
                                 <div className="flex flex-col px-4 pt-2 gap-4">
                                     <div className="flex items-center w-full justify-between">
-                                        <p className="header-title">
+                                        <p className="header-title md:text-2xl">
                                             Existing Coupons
                                         </p>
                                         <div className="text-green-800 font-semibold">
-                                            <AiOutlinePlusCircle onClick={() => setAddClick((prev) => !prev)} size={30} className={`${addClick && 'hidden'}`} />
-                                            <AiOutlineMinusCircle onClick={() => setAddClick((prev) => !prev)} size={30} className={`${!addClick && 'hidden'}`} />
+                                            <AiOutlinePlusCircle onClick={() => setAddClick((prev) => !prev)} className={`text-4xl md:text-5xl ${addClick && 'hidden'}`} />
+                                            <AiOutlineMinusCircle onClick={() => setAddClick((prev) => !prev)} className={`text-4xl md:text-5xl ${!addClick && 'hidden'}`} />
                                         </div>
                                     </div>
                                     <div className="flex flex-col w-full h-auto rounded-md gap-2 bg-gray-50 py-2">
                                         {couponList?.data?.map((items, index) => (
                                             <div key={index}>
-                                                <div className="flex gap-2 h-[7vh] w-full shrink-0 items-center justify-between bg-gray-100 p-2 rounded-md">
-                                                    <p className="flex text-lg">
+                                                <div className="flex gap-2 h-[7vh] md:gap-5 md:h-[9vh] w-full shrink-0 items-center justify-between bg-gray-100 p-2 rounded-md">
+                                                    <p className="flex text-lg md:text-2xl">
                                                         {items.code}
                                                     </p>
                                                     <div className="flex gap-4 text-white">
@@ -95,7 +95,7 @@ const AdminCouponPage = () => {
 
                                         {couponList?.data.length === 0 &&
                                             <div className="flex gap-2 h-[7vh] w-full shrink-0 items-center justify-center">
-                                                <p className="flex text-lg">
+                                                <p className="flex text-lg md:text-3xl">
                                                     No Coupon Found
                                                 </p>
                                                 <AiOutlineSmile size={25} />

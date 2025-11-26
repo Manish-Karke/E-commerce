@@ -50,7 +50,6 @@ class AdminService {
                 "Content-Type": 'multipart/form-data'
             }
         })
-        console.log('adminsvc create banner', response.data)
         return response.data
     }
 

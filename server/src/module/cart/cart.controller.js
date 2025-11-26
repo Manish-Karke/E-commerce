@@ -1,4 +1,6 @@
 const couponSvc = require("../coupon/coupon.service");
+const OrderModel = require("../orderItems/orderItems.model");
+const orderItemsSvc = require("../orderItems/orderItems.service");
 const productSvc = require("../product/product.service");
 const cartSvc = require("./cart.service");
 
@@ -87,7 +89,7 @@ class CartController {
             const cartList = await cartSvc.listCart(filter);
 
             res.json({
-                data: (cartList.length === 0) ? "No cart is found" : cartList,
+                data: cartList,
                 code: 200,
                 status: "Cart Listed",
                 message: "Thank you for listing the cart"
@@ -117,9 +119,9 @@ class CartController {
                 _id: cartDetails.items.product._id
             })
 
-            const {data: transformCartDetails, actualQuantity} = await cartSvc.updateTransformCartDetails(req, cartDetails, productDetails);
-            
-            const updatedCartDetails = await cartSvc.updateCart({_id: id}, {$set: transformCartDetails})
+            const { data: transformCartDetails, actualQuantity } = await cartSvc.updateTransformCartDetails(req, cartDetails, productDetails);
+
+            const updatedCartDetails = await cartSvc.updateCart({ _id: id }, { $set: transformCartDetails })
 
             productDetails.stock -= actualQuantity
             await productDetails.save();
@@ -151,13 +153,54 @@ class CartController {
                 }
             }
 
-            const deletedCart = await cartSvc.deleteCart({_id: id});
+            const orderDetails = await OrderModel.findOne({
+                "items.cartId": id
+            })
+
+            const productDetails = await productSvc.getSingleProductById(cartDetails.items.product._id)
+
+            try {
+                const deletedCart = await cartSvc.deleteCart({ _id: id });
+                productDetails.stock += cartDetails.items.quantity
+                await productDetails.save();
+
+                if (orderDetails) {
+                    await OrderModel.findByIdAndDelete({ _id: orderDetails.id })
+                }
+
+                res.json({
+                    data: deletedCart,
+                    code: 200,
+                    status: "Cart deleted",
+                    message: "Cart deleted"
+                })
+            } catch (error) {
+                console.log(error)
+
+                return res.status(500).json({
+                    code: 500,
+                    status: "Failed",
+                    message: "Unable to delete cart",
+                    error,
+                });
+            }
+
+        } catch (error) {
+            throw error
+        }
+    }
+
+    getSingleCartById = async (req, res, next) => {
+        try {
+            const { id } = req.params
+
+            const cartDetails = await cartSvc.getCartById(id)
 
             res.json({
-                data: deletedCart,
-                code: 200, 
-                status: "Cart deleted",
-                message: "Cart deleted"
+                data: cartDetails,
+                message: "Success",
+                code: 200,
+                options: null
             })
         } catch (error) {
             throw error

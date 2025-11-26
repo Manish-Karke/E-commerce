@@ -61,8 +61,6 @@ class AdminController {
             let ban = req.body.isBan
             let {id} = req.params;
 
-            console.log(req.query)
-
             const updatedUserDetails = await adminSvc.updateUserById({
                 "isBan": ban
             }, {

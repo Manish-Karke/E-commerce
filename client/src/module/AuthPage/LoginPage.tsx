@@ -19,7 +19,7 @@ const LoginPage = () => {
     const submitForm = async (data: authLoginprops) => {
         try {
             await authSvc.loginUser(data);
-            navigate('/')
+            navigate('/v1/home')
         } catch (error) {
             throw error
         }

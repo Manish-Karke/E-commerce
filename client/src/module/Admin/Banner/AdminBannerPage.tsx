@@ -40,8 +40,8 @@ const AdminBannerPage = () => {
             {!isLoading &&
                 <>
                     {isBanner ?
-                        <div className="flex flex-col w-full h-full p-4 gap-4 bg-gray-100 rounded-md ">
-                            <h2 className="text-2xl header-title">
+                        <div className="flex flex-col w-full h-full p-4 gap-4 bg-gray-100 rounded-md md:text-2xl">
+                            <h2 className="text-2xl header-title md:text-3xl">
                                 Update Banner
                             </h2>
                             <div className="flex flex-col bg-gray-200 rounded-md p-4 border border-violet-300">
@@ -51,7 +51,7 @@ const AdminBannerPage = () => {
                         <>
                             <div className="flex flex-col w-full h-full">
                                 <div className="flex flex-col w-full h-auto shrink-0 p-4 gap-2 text-xl bg-gray-100 rounded-md">
-                                    <h2 className="flex header-title text-2xl">
+                                    <h2 className="flex header-title text-2xl md:text-3xl">
                                         Banners
                                     </h2>
                                     <div
@@ -64,19 +64,19 @@ const AdminBannerPage = () => {
                                 </div>
                                 <div className="flex flex-col px-4 pt-2 gap-4">
                                     <div className="flex items-center w-full justify-between">
-                                        <p className="header-title">
+                                        <p className="header-title md:text-2xl">
                                             Existing Banners
                                         </p>
                                         <div className="text-green-800 font-semibold">
-                                            <AiOutlinePlusCircle onClick={() => setBannerAddClick((prev) => !prev)} size={30} className={`${bannerAddClick && 'hidden'}`} />
-                                            <AiOutlineMinusCircle onClick={() => setBannerAddClick((prev) => !prev)} size={30} className={`${!bannerAddClick && 'hidden'}`} />
+                                            <AiOutlinePlusCircle onClick={() => setBannerAddClick((prev) => !prev)} className={`text-4xl md:text-5xl ${bannerAddClick && 'hidden'}`} />
+                                            <AiOutlineMinusCircle onClick={() => setBannerAddClick((prev) => !prev)} className={`text-4xl md:text-5xl ${!bannerAddClick && 'hidden'}`} />
                                         </div>
                                     </div>
-                                    <div className="flex flex-col w-full h-auto rounded-md gap-2 bg-gray-50 py-2">
+                                    <div className="flex flex-col w-full h-auto rounded-md gap-2 md:gap-4 bg-gray-50 py-2">
                                         {bannerList?.data.map((items, index) => (
                                             <div key={index}>
-                                                <div className="flex gap-2 h-[7vh] w-full shrink-0 items-center justify-between bg-gray-100 p-2 rounded-md">
-                                                    <p className="flex text-lg">
+                                                <div className="flex gap-2 h-[7vh] md:h-[10vh] w-full shrink-0 items-center justify-between bg-gray-100 p-2 rounded-md">
+                                                    <p className="flex text-lg md:text-2xl">
                                                         {items.title}
                                                     </p>
                                                     <div className="flex gap-4 text-white">

@@ -25,7 +25,6 @@ class OrderItemsController {
             })
 
             const transformCartDetails = orderItemsSvc.transformOrderItems(req, cartDetails, productDetails);
-            console.log(transformCartDetails)
             const orderDetails = await orderItemsSvc.saveOrderItems(transformCartDetails);
 
             res.json({
@@ -43,14 +42,13 @@ class OrderItemsController {
     checkoutList = async (req, res, next) => {
         try {
             let id = req.loggedInUser._id;
-            console.log(id)
 
             const orderItemsDetails = await orderItemsSvc.orderList({
                 user: id
             });
 
             res.json({
-                data: (orderItemsDetails.length === 0) ? "No order placed" : orderItemsDetails,
+                data: orderItemsDetails,
                 code: 200,
                 status: "Order list",
                 message: "Order listed"
@@ -68,9 +66,9 @@ class OrderItemsController {
                 _id: id
             });
 
-            if(!data) {
+            if (!data) {
                 throw {
-                    code: 200, 
+                    code: 200,
                     status: "No cart found",
                     message: "No cart found"
                 }
@@ -85,9 +83,9 @@ class OrderItemsController {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        return_url: 'http://localhost:5173/payment-success',
-                        website_url: 'http://localhost:5173/payment/',
-                        amount: 1000 ,
+                        return_url: `http://localhost:5173/customer/cart/khalti-success`,
+                        website_url: `http://localhost:5173`,
+                        amount: 1000,
                         purchase_order_id: data._id,
                         purchase_order_name: data.user.name,
                         customer_info: {
@@ -114,23 +112,23 @@ class OrderItemsController {
 
     cancelCheckout = async (req, res, next) => {
         try {
-            const {id} = req.params;
+            const { id } = req.params;
 
             const orderItemsDetails = await orderItemsSvc.getItemOrderById({
                 _id: id
             })
 
-            if(!orderItemsDetails) {
+            if (!orderItemsDetails) {
                 throw {
-                    code: 422, 
+                    code: 422,
                     status: "No order details found",
                     message: "No order details found"
                 }
             }
 
-            if(orderItemsDetails.paymentStatus !== "paid" && orderItemsDetails.orderStatus !== 'shipped'){
+            if (orderItemsDetails.paymentStatus !== "paid" && orderItemsDetails.orderStatus !== 'shipped') {
                 const deleteOrderItems = await orderItemsSvc.deleteOrderItemsById(
-                    {_id: id}
+                    { _id: id }
                 )
 
                 res.json({
@@ -140,7 +138,7 @@ class OrderItemsController {
                 })
             } else {
                 throw {
-                    code: 422, 
+                    code: 422,
                     status: "Payment already paid or the order is already shipped",
                     message: "Contact our customer supporter for refund and cancel the order"
                 }

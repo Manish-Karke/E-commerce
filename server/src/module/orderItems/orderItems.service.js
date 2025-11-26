@@ -50,13 +50,15 @@ class OrderItemsService {
     }
 
     orderList = async (data) => {
-        const orderList = await OrderModel.find(data);
+        const orderList = await OrderModel.find(data)
+            .populate('items.product')
+        
         return orderList
     }
 
     getItemOrderById = async (data) => {
         const itemOrder = await OrderModel.findById(data)
-            // .populate('user')
+            .populate('user')
         return itemOrder
     }
 

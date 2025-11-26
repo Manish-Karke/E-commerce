@@ -66,9 +66,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [bannerAddClick, setBannerAddClick] = useState<boolean>(false);
 
-    let token = localStorage.getItem('actualToken')
-
     const fetchUser = useCallback( async () => {
+        let token = localStorage.getItem('actualToken')
+
         try {
             if (token) {
                 let response = await authSvc.getMyProfile();
@@ -84,7 +84,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         fetchUser();
-    }, [token, fetchUser])
+    }, [localStorage.getItem('actualToken'), fetchUser])
 
     return (
         <>

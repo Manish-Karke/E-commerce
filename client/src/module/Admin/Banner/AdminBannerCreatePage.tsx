@@ -90,10 +90,10 @@ const AdminBannerCreatePage = () => {
 
     return (
         <>
-            <p className="flex text-lg w-full">
+            <p className="flex text-lg w-full md:text-2xl">
                 Create New Banner
             </p>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex w-full h-auto">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex w-full h-auto md:text-2xl">
                 <div className="flex flex-col gap-5 w-full h-auto">
                     <div className="flex flex-col w-full justify-center">
                         <div className='flex flex-col relative h-[9vh] shink-0'>
@@ -108,12 +108,12 @@ const AdminBannerCreatePage = () => {
                                     />
                                 )}
                             />
-                            <div className='absolute bottom-2 left-1 text-red-500/90 text-lg'>
+                            <div className='absolute bottom-2 left-1 text-red-500/90 text-lg md:text-2xl'>
                                 {errors.title?.message}
                             </div>
                         </div>
-                        <div className='flex relative h-[9vh] w-full shrink-0 justify-between'>
-                            <div className="flex flex-col relative">
+                        <div className='flex relative h-[9vh] w-full shrink-0 justify-between gap-2'>
+                            <div className="flex flex-col relative w-full">
                                 <Controller
                                     name='startAt'
                                     control={control}
@@ -129,7 +129,7 @@ const AdminBannerCreatePage = () => {
                                     {errors.startAt?.message}
                                 </div>
                             </div>
-                            <div>
+                            <div className="flex w-full">
                                 <Controller
                                     name='endAt'
                                     control={control}
@@ -147,7 +147,7 @@ const AdminBannerCreatePage = () => {
                             </div>
                         </div>
                         <div className='flex flex-col relative h-[9vh] shirnk-0'>
-                            <p className="text-lg px-2">Banner Type</p>
+                            <p className="text-lg px-2 md:text-2xl">Banner Type</p>
                             <Controller
                                 name='type'
                                 control={control}
@@ -169,7 +169,7 @@ const AdminBannerCreatePage = () => {
                             </div>
                         </div>
                         <div className='flex flex-col relative h-[9vh] shrink-0 w-full'>
-                            <p className="text-lg px-2">Banner Priority</p>
+                            <p className="text-lg px-2 md:text-2xl">Banner Priority</p>
                             <Controller
                                 name='priority'
                                 control={control}
@@ -186,7 +186,7 @@ const AdminBannerCreatePage = () => {
                             </div>
                         </div>
                         <div className='flex flex-col relative h-[9vh] shink-0'>
-                            <p className="text-lg px-2">Banner Active</p>
+                            <p className="text-lg px-2 md:text-2xl">Banner Active</p>
                             <Controller
                                 name='isActive'
                                 control={control}
@@ -207,7 +207,7 @@ const AdminBannerCreatePage = () => {
                             </div>
                         </div>
                         <div className='flex flex-col relative h-[13vh]'>
-                            <p className="text-lg px-2">Banner Picture</p>
+                            <p className="text-lg md:text-2xl px-2">Banner Picture</p>
                             <Controller
                                 name='image'
                                 control={control}
@@ -243,12 +243,12 @@ const AdminBannerCreatePage = () => {
                     </div>
                     <div className="flex w-full h-[6vh]">
                         {!isSubmitting &&
-                            <button type="submit" className="flex w-full bg-green-950 h-full text-white header-title items-center justify-center rounded-md">
+                            <button type="submit" className="flex w-full bg-green-950 h-full md:text-3xl text-white header-title items-center justify-center rounded-md">
                                 CREATE BANNER
                             </button>
                         }
                         {isSubmitting &&
-                            < div className="flex w-full bg-green-950 h-full text-white header-title items-center justify-center rounded-md">
+                            < div className="flex w-full bg-green-950 h-full md:text-3xl text-white header-title items-center justify-center rounded-md">
                                 <ImSpinner9 className="animate-spin" />
                             </div>
                         }
