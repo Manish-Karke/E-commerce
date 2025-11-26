@@ -4,7 +4,7 @@ import { AiOutlineUser, AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 import toast, { Toaster } from "react-hot-toast";
 import { useAppContext } from "../../context/AppContext";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://127.0.0.1:8001/api";
+const API_BASE = "http://127.0.0.1:8001/api";
 
 interface Review {
   _id: string;
@@ -21,10 +21,16 @@ const ProductReviewSection = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+
   const [reviewText, setReviewText] = useState("");
+  const [newRating, setNewRating] = useState(0);
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");
+  const [editRating, setEditRating] = useState(0);
+
+  const [expanded, setExpanded] = useState(false);
+  const initialCount = 2;
 
   const token = localStorage.getItem("actualToken");
 
@@ -45,9 +51,52 @@ const ProductReviewSection = () => {
     fetchReviews();
   }, [fetchReviews]);
 
+  const StarRating = ({
+    rating,
+    setRating,
+    interactive = true,
+    size = "text-2xl",
+  }: {
+    rating: number;
+    setRating: (n: number) => void;
+    interactive?: boolean;
+    size?: string;
+  }) => {
+    const [hover, setHover] = useState(0);
+
+    return (
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            type="button"
+            disabled={!interactive}
+            onClick={() => interactive && setRating(star)}
+            onMouseEnter={() => interactive && setHover(star)}
+            onMouseLeave={() => interactive && setHover(0)}
+            className={`transition-all ${
+              interactive ? "hover:scale-110 cursor-pointer" : "cursor-default"
+            } ${size}`}
+          >
+            <span
+              className={
+                star <= (hover || rating)
+                  ? "text-yellow-400 drop-shadow"
+                  : "text-gray-300"
+              }
+            >
+              ★
+            </span>
+          </button>
+        ))}
+      </div>
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!reviewText.trim()) return toast.error("Write something!");
+    if (!reviewText.trim()) return toast.error("Please write a review");
+    if (newRating === 0) return toast.error("Please select a rating");
 
     setSubmitting(true);
     try {
@@ -57,18 +106,19 @@ const ProductReviewSection = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ body: reviewText.trim(), rating: 5 }),
+        body: JSON.stringify({ body: reviewText.trim(), rating: newRating }),
       });
 
-      const result = await res.json();
       if (res.ok) {
-        toast.success("Review added!");
+        toast.success("Review posted successfully!");
         setReviewText("");
-        fetchReviews(); // refresh list
+        setNewRating(0);
+        fetchReviews();
       } else {
-        toast.error(result.message || "Failed");
+        const data = await res.json();
+        toast.error(data.message || "Failed to post review");
       }
-    } catch (err) {
+    } catch {
       toast.error("Network error");
     } finally {
       setSubmitting(false);
@@ -78,10 +128,12 @@ const ProductReviewSection = () => {
   const startEdit = (review: Review) => {
     setEditingId(review._id);
     setEditText(review.body);
+    setEditRating(review.rating);
   };
 
   const saveEdit = async (reviewId: string) => {
     if (!editText.trim()) return toast.error("Review cannot be empty");
+    if (editRating === 0) return toast.error("Please select a rating");
 
     try {
       const res = await fetch(
@@ -92,7 +144,7 @@ const ProductReviewSection = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ body: editText.trim() }),
+          body: JSON.stringify({ body: editText.trim(), rating: editRating }),
         }
       );
 
@@ -101,16 +153,15 @@ const ProductReviewSection = () => {
         setEditingId(null);
         fetchReviews();
       } else {
-        const err = await res.json();
-        toast.error(err.message || "Update failed");
+        toast.error("Update failed");
       }
-    } catch (err) {
+    } catch {
       toast.error("Network error");
     }
   };
 
   const deleteReview = async (reviewId: string) => {
-    if (!confirm("Delete this review?")) return;
+    if (!confirm("Delete this review permanently?")) return;
 
     try {
       const res = await fetch(
@@ -124,174 +175,258 @@ const ProductReviewSection = () => {
       if (res.ok) {
         toast.success("Review deleted");
         setReviews((prev) => prev.filter((r) => r._id !== reviewId));
-      } else {
-        toast.error("Delete failed");
       }
-    } catch (err) {
-      toast.error("Network error");
+    } catch {
+      toast.error("Failed to delete");
     }
   };
 
-  const renderStars = (rating: number) => (
-    <div className="flex gap-1">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <span
-          key={i}
-          className={`text-xl ${
-            i <= rating ? "text-yellow-400" : "text-gray-300"
-          }`}
-        >
-          ★
-        </span>
-      ))}
-    </div>
-  );
+  const isOwnReview = (userId: string) => loggedInUser?._id === userId;
 
-  const isOwnReview = (reviewUserId: string) =>
-    loggedInUser?._id === reviewUserId;
+  const averageRating =
+    reviews.length > 0
+      ? (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1)
+      : "0";
 
-  if (loading)
+  const ratingDistribution = [5, 4, 3, 2, 1].map((star) => {
+    const count = reviews.filter((r) => r.rating === star).length;
+    const percent = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
+    return { star, count, percent };
+  });
+
+  if (loading) {
     return (
-      <div className="py-12 text-center text-sm text-gray-500">
-        Loading reviews...
-      </div>
+      <div className="py-20 text-center text-gray-500">Loading reviews...</div>
     );
+  }
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-16 bg-gray-300">
       <Toaster position="top-center" />
 
-      <h2 className="text-2xl font-bold mb-8 text-gray-900">
-        Customer Reviews ({reviews.length})
-      </h2>
+      {reviews.length > 0 && (
+        <div className="bg-gray-50 rounded-2xl p-8 mb-12">
+          <div className="grid md:grid-cols-3 gap-10 items-center">
+            <div className="text-center">
+              <div className="text-6xl font-bold text-gray-900">
+                {averageRating}
+              </div>
+              <StarRating
+                rating={Math.round(parseFloat(averageRating))}
+                setRating={() => {}}
+                interactive={false}
+                size="text-4xl"
+              />
+              <p className="text-gray-600 mt-2">
+                Based on {reviews.length} reviews
+              </p>
+            </div>
+
+            <div className="md:col-span-2 space-y-3">
+              {ratingDistribution.map(({ star, percent }) => (
+                <div key={star} className="flex items-center gap-4">
+                  <span className="text-sm font-medium w-10">{star}★</span>
+                  <div className="flex-1 bg-gray-200 rounded-full h-3">
+                    <div
+                      className="bg-orange-500 h-3 rounded-full transition-all duration-700"
+                      style={{ width: `${percent}%` }}
+                    />
+                  </div>
+                  <span className="text-xs text-gray-600 w-12 text-right">
+                    {Math.round(percent)}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {loggedInUser ? (
-        <div className="mb-12 bg-gray-50 border rounded-xl p-6">
-          <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
-          <form onSubmit={handleSubmit}>
-            <textarea
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              placeholder="Share your thoughts..."
-              rows={4}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 text-sm resize-none"
-              required
-            />
+        <div className=" border rounded-2xl p-8 mb-12 shadow-sm">
+          <h3 className="text-xl font-bold mb-6">Write Your Review</h3>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                Rating <span className="text-red-500">*</span>
+              </label>
+              <StarRating
+                rating={newRating}
+                setRating={setNewRating}
+                size="text-3xl"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                Your Review <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder="Share your experience... What did you like or dislike?"
+                rows={5}
+                className="w-full px-5 py-4 border rounded-xl focus:ring-2 focus:ring-orange-500 resize-none"
+                required
+              />
+            </div>
+
             <button
               type="submit"
-              disabled={submitting}
-              className="mt-4 px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium disabled:opacity-70"
+              disabled={submitting || newRating === 0 || !reviewText.trim()}
+              className="px-8 py-4 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-800 text-white font-semibold rounded-xl transition"
             >
-              {submitting ? "Submitting..." : "Post Review"}
+              {submitting ? "Posting..." : "Submit Review"}
             </button>
           </form>
         </div>
       ) : (
-        <div className="mb-12 text-center py-10 bg-blue-50 rounded-xl">
-          <p className="text-blue-800">
-            Please{" "}
-            <a href="/auth/login" className="underline font-bold">
-              log in
+        <div className="text-center py-12 bg-blue-50 rounded-2xl mb-12">
+          <p className="text-lg">
+            <a href="/auth/login" className="text-blue-600 font-bold underline">
+              Log in
             </a>{" "}
             to write a review
           </p>
         </div>
       )}
 
-      <div className="space-y-8">
+      <div>
+        <h2 className="text-2xl font-bold mb-8">
+          Customer Reviews {reviews.length > 0 && `(${reviews.length})`}
+        </h2>
+
         {reviews.length === 0 ? (
-          <p className="text-center py-16 text-gray-500">
+          <p className="text-center py-20 text-gray-500 text-lg">
             No reviews yet. Be the first!
           </p>
         ) : (
-          reviews.map((review) => (
-            <div
-              key={review._id}
-              className="flex gap-5 pb-8 border-b last:border-b-0"
-            >
-              <div className="shrink-0">
-                {review.user?.avatar ? (
-                  <img
-                    src={review.user.avatar}
-                    alt={review.user.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                    <AiOutlineUser className="text-2xl text-gray-500" />
-                  </div>
-                )}
-              </div>
-
-              <div className="flex-1">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-semibold text-base">
-                      {review.user?.name || "Anonymous"}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {new Date(review.createdAt).toLocaleDateString()}
-                    </p>
+          <div className="space-y-8">
+            {reviews
+              .slice(0, expanded ? undefined : initialCount)
+              .map((review) => (
+                <div
+                  key={review._id}
+                  className="flex gap-6 pb-8 border-b last:border-b-0 animate-in fade-in slide-in-from-bottom-2 duration-500"
+                >
+                  <div className="shrink-0">
+                    {review.user.avatar ? (
+                      <img
+                        src={review.user.avatar}
+                        alt={review.user.name}
+                        className="w-14 h-14 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center">
+                        <AiOutlineUser className="text-3xl text-gray-500" />
+                      </div>
+                    )}
                   </div>
 
-                  {isOwnReview(review.user._id) && (
-                    <div className="flex gap-3 text-gray-600">
-                      <button
-                        onClick={() => startEdit(review)}
-                        className="hover:text-blue-600 transition"
-                        title="Edit"
-                      >
-                        <AiOutlineEdit className="text-xl" />
-                      </button>
-                      <button
-                        onClick={() => deleteReview(review._id)}
-                        className="hover:text-red-600 transition"
-                        title="Delete"
-                      >
-                        <AiOutlineDelete className="text-xl" />
-                      </button>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-semibold text-lg">
+                          {review.user.name}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {new Date(review.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            }
+                          )}
+                        </p>
+                      </div>
+
+                      {isOwnReview(review.user._id) && (
+                        <div className="flex gap-3 text-gray-600">
+                          <button
+                            onClick={() => startEdit(review)}
+                            title="Edit"
+                          >
+                            <AiOutlineEdit className="text-xl hover:text-blue-600" />
+                          </button>
+                          <button
+                            onClick={() => deleteReview(review._id)}
+                            title="Delete"
+                          >
+                            <AiOutlineDelete className="text-xl hover:text-red-600" />
+                          </button>
+                        </div>
+                      )}
                     </div>
+
+                    <div className="flex items-center gap-3 my-3">
+                      <StarRating
+                        rating={review.rating}
+                        setRating={() => {}}
+                        interactive={false}
+                      />
+                      <span className="text-sm font-medium text-gray-700">
+                        {review.rating}.0
+                      </span>
+                    </div>
+
+                    {editingId === review._id ? (
+                      <div className="mt-5 space-y-5 bg-gray-50 p-5 rounded-xl">
+                        <div>
+                          <label className="text-sm font-medium">
+                            Update Rating
+                          </label>
+                          <StarRating
+                            rating={editRating}
+                            setRating={setEditRating}
+                            size="text-3xl"
+                          />
+                        </div>
+                        <textarea
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          rows={4}
+                          className="w-full px-4 py-3 border rounded-lg resize-none focus:ring-2 focus:ring-orange-500"
+                        />
+                        <div className="flex gap-3">
+                          <button
+                            onClick={() => saveEdit(review._id)}
+                            className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditingId(null)}
+                            className="px-6 py-2 bg-gray-300 hover:bg-gray-400 rounded-lg font-medium"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-gray-700 leading-relaxed mt-2">
+                        {review.body}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+            {reviews.length > initialCount && (
+              <div className="text-center pt-8">
+                <button
+                  onClick={() => setExpanded(!expanded)}
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold rounded-xl transition-all"
+                >
+                  {expanded ? (
+                    <>Show Less ↑</>
+                  ) : (
+                    <>Show All {reviews.length-initialCount} Reviews ↓</>
                   )}
-                </div>
-
-                <div className="flex items-center gap-3 my-3">
-                  {renderStars(review.rating)}
-                  <span className="text-sm text-gray-600">
-                    {review.rating}.0
-                  </span>
-                </div>
-
-                {editingId === review._id ? (
-                  <div className="mt-3">
-                    <textarea
-                      value={editText}
-                      onChange={(e) => setEditText(e.target.value)}
-                      className="w-full px-3 py-2 border rounded-lg text-sm resize-none"
-                      rows={3}
-                    />
-                    <div className="mt-2 flex gap-2">
-                      <button
-                        onClick={() => saveEdit(review._id)}
-                        className="px-4 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setEditingId(null)}
-                        className="px-4 py-1 bg-gray-300 text-gray-700 text-sm rounded hover:bg-gray-400"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-700 mt-3 leading-relaxed">
-                    {review.body}
-                  </p>
-                )}
+                </button>
               </div>
-            </div>
-          ))
+            )}
+          </div>
         )}
       </div>
     </div>
