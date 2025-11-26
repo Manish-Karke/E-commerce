@@ -14,6 +14,7 @@ import HeaderComponent from "../../component/Header"
 import Sidebar from "../../component/Sidebar"
 import SearchPage from "../SearchPage/SearchPage"
 import customerSvc from "../../service/customer.service"
+import ProductReviewSection from "./reviewSection"
 
 export interface ProductCartProps {
     setCartClicked: React.Dispatch<React.SetStateAction<boolean>>
@@ -232,11 +233,13 @@ const ProductViewPage = () => {
                                             : <></>}
                                     </div>
                                 </div>
-                                <div>
-                                    <h2>
-                                        Reviews
-                                    </h2>
-                                </div>
+                               <div className="w-full mt-16 px-4 md:px-0">
+  <div className="max-w-6xl mx-auto">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8">
+      <ProductReviewSection />
+    </div>
+  </div>
+</div>
                                 <div style={{ width: `${window.innerWidth}px` }} className="flex flex-col items-center justify-center px-4 h-auto">
                                     <div className="flex flex-col w-[95vw] gap-3">
                                         <h1 className="flex header-title text-lg md:text-lg">
