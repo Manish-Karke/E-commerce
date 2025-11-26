@@ -14,7 +14,7 @@ h2,
 }
 
 .custom-rate .ant-rate-star-zero {
-  color: rgb(156 163 175 / 1)
+  color: rgb(156 163 175 / 1);
 }
 
 .custom-rate .ant-rate-star {
@@ -43,4 +43,16 @@ h2,
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+html,
+body {
+  overflow-x: hidden;
 }
