@@ -121,10 +121,10 @@ const AdminBannerUpdatePage = () => {
         <>
             {!isLoading &&
                 <>
-                    <p className="flex text-lg w-full">
+                    <p className="flex text-lg w-full md:text-2xl">
                         Create New Banner
                     </p>
-                    <form onSubmit={handleSubmit(() => onSubmit(id))} className="flex w-full h-auto">
+                    <form onSubmit={handleSubmit(() => onSubmit(id))} className="flex w-full h-auto md:mt-3">
                         <div className="flex flex-col gap-5 w-full h-auto">
                             <div className="flex flex-col w-full justify-center">
                                 <div className='flex flex-col relative h-[9vh] shink-0'>
@@ -143,8 +143,8 @@ const AdminBannerUpdatePage = () => {
                                         {errors.title?.message}
                                     </div>
                                 </div>
-                                <div className='flex relative h-[9vh] w-full shrink-0 justify-between'>
-                                    <div className="flex flex-col relative">
+                                <div className='flex relative h-[9vh] md:gap-5 w-full shrink-0 justify-between'>
+                                    <div className="flex flex-col relative w-full">
                                         <Controller
                                             name='startAt'
                                             control={control}
@@ -160,7 +160,7 @@ const AdminBannerUpdatePage = () => {
                                             {errors.startAt?.message}
                                         </div>
                                     </div>
-                                    <div>
+                                    <div className="flex w-full">
                                         <Controller
                                             name='endAt'
                                             control={control}
@@ -178,7 +178,7 @@ const AdminBannerUpdatePage = () => {
                                     </div>
                                 </div>
                                 <div className='flex flex-col relative h-[9vh] shirnk-0'>
-                                    <p className="text-lg px-2">Banner Type</p>
+                                    <p className="text-lg md:text-2xl px-2">Banner Type</p>
                                     <Controller
                                         name='type'
                                         control={control}
@@ -200,7 +200,7 @@ const AdminBannerUpdatePage = () => {
                                     </div>
                                 </div>
                                 <div className='flex flex-col relative h-[9vh] shrink-0 w-full'>
-                                    <p className="text-lg px-2">Banner Priority</p>
+                                    <p className="text-lg md:text-2xl px-2">Banner Priority</p>
                                     <Controller
                                         name='priority'
                                         control={control}
@@ -217,7 +217,7 @@ const AdminBannerUpdatePage = () => {
                                     </div>
                                 </div>
                                 <div className='flex flex-col relative h-[9vh] shink-0'>
-                                    <p className="text-lg px-2">Banner Active</p>
+                                    <p className="text-lg md:text-2xl px-2">Banner Active</p>
                                     <Controller
                                         name='isActive'
                                         control={control}
@@ -238,7 +238,7 @@ const AdminBannerUpdatePage = () => {
                                     </div>
                                 </div>
                                 <div className='flex flex-col relative h-[13vh]'>
-                                    <p className="text-lg px-2">Banner Picture</p>
+                                    <p className="text-lg md:text-2xl px-2">Banner Picture</p>
                                     <Controller
                                         name='image'
                                         control={control}

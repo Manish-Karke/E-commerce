@@ -25,7 +25,11 @@ class CartService {
     }
 
     listCart = async (data) => {
-        const cartList = await CartModel.find(data);
+        const cartList = await CartModel.find(data)
+            .populate('items.product')
+            .populate('user')
+            .populate('coupon')
+
         return cartList
     }
 
@@ -44,8 +48,6 @@ class CartService {
             let actualQuantity = 0
 
             if (data.items) {
-                console.log("this is running")
-
                 actualQuantity = data.items.quantity - oldData.items.quantity
                 data.items.price = productDetails.price * 100 * data.items.quantity;
                 data.items.product = productDetails._id
@@ -69,9 +71,13 @@ class CartService {
     }
 
     updateCart = async (data, filter) => {
-        const cartDetails = await CartModel.findByIdAndUpdate(data, filter, { new: true });
+        try {
+            const cartDetails = await CartModel.findByIdAndUpdate(data, filter, { new: true });
 
-        return cartDetails
+            return cartDetails
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     deleteCart = async (data) => {

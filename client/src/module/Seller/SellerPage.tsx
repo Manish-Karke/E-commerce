@@ -47,8 +47,6 @@ const SellerPage = () => {
     }, [page, limit])
 
     const handleChange = (pageNumber: number, pageSize: number) => {
-        console.log(pageNumber, pageSize)
-
         setPage(pageNumber)
         setLimit(pageSize)
     }
@@ -72,7 +70,7 @@ const SellerPage = () => {
                         <>
                             {isSellerUpdate ?
                                 <div className="flex flex-col w-full h-full p-4 gap-4 bg-gray-100 rounded-md ">
-                                    <h2 className="text-2xl header-title">
+                                    <h2 className="text-2xl header-title md:text-3xl">
                                         Update Coupon
                                     </h2>
                                     <div className="flex flex-col bg-gray-200 rounded-md p-4 border border-violet-300">
@@ -82,7 +80,7 @@ const SellerPage = () => {
                                 <div className="flex flex-col w-full h-full">
                                     <div className="flex flex-col relative">
                                         <div className="flex flex-col w-full h-auto shrink-0 p-4 gap-2 text-xl bg-gray-100 rounded-md">
-                                            <h2 className="flex header-title text-2xl">
+                                            <h2 className="flex header-title text-2xl md:text-3xl">
                                                 Products
                                             </h2>
                                             <div
@@ -95,19 +93,19 @@ const SellerPage = () => {
                                         </div>
                                         <div className="flex flex-col px-4 pt-2 gap-4">
                                             <div className="flex items-center w-full justify-between">
-                                                <p className="header-title">
+                                                <p className="header-title md:text-2xl">
                                                     Existing Products
                                                 </p>
                                                 <div className="text-green-800 font-semibold">
-                                                    <AiOutlinePlusCircle onClick={() => setAddClick((prev) => !prev)} size={30} className={`${addClick && 'hidden'}`} />
-                                                    <AiOutlineMinusCircle onClick={() => setAddClick((prev) => !prev)} size={30} className={`${!addClick && 'hidden'}`} />
+                                                    <AiOutlinePlusCircle onClick={() => setAddClick((prev) => !prev)} className={`text-4xl md:text-5xl ${addClick && 'hidden'}`} />
+                                                    <AiOutlineMinusCircle onClick={() => setAddClick((prev) => !prev)} className={`text-4xl md:text-5xl ${!addClick && 'hidden'}`} />
                                                 </div>
                                             </div>
                                             <div className="flex flex-col w-full h-auto rounded-md gap-4 bg-gray-50 py-2">
                                                 {productList?.data.map((items, index) => (
                                                     <div key={index} onClick={() => navigate(`view/${items._id}`)} className="flex border-violet-400 border rounded-md">
                                                         <div className="flex gap-2 h-[10vh] w-full shrink-0 items-center justify-between bg-gray-100 p-2 rounded-md">
-                                                            <p className="flex text-lg">
+                                                            <p className="flex text-lg md:text-2xl">
                                                                 {items.title}
                                                             </p>
                                                             <div className="flex gap-4 text-white">

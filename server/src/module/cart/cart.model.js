@@ -13,7 +13,8 @@ const CartSchema = new mongoose.Schema({
     },
     coupon: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Coupon'
+        ref: 'Coupon',
+        default: null
     },
     meta: {}
 }, { timestamps: true });

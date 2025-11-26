@@ -170,7 +170,7 @@ const ProductReviewSection = () => {
         Customer Reviews ({reviews.length})
       </h2>
 
-      {/* Write New Review */}
+  
       {loggedInUser ? (
         <div className="mb-12 bg-gray-50 border rounded-xl p-6">
           <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
@@ -204,7 +204,7 @@ const ProductReviewSection = () => {
         </div>
       )}
 
-      {/* Reviews List */}
+   
       <div className="space-y-8">
         {reviews.length === 0 ? (
           <p className="text-center py-16 text-gray-500">
@@ -231,7 +231,7 @@ const ProductReviewSection = () => {
                 )}
               </div>
 
-              {/* Content */}
+       
               <div className="flex-1">
                 <div className="flex items-start justify-between">
                   <div>
@@ -243,7 +243,7 @@ const ProductReviewSection = () => {
                     </p>
                   </div>
 
-                  {/* Edit/Delete Buttons - Only for own review */}
+
                   {isOwnReview(review.user._id) && (
                     <div className="flex gap-3 text-gray-600">
                       <button
@@ -271,7 +271,7 @@ const ProductReviewSection = () => {
                   </span>
                 </div>
 
-                {/* Edit Mode */}
+               
                 {editingId === review._id ? (
                   <div className="mt-3">
                     <textarea

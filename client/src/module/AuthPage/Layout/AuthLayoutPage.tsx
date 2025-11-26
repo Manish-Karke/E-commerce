@@ -7,7 +7,7 @@ const AuthLayoutPage = () => {
     const [vh, setVh] = useState<number>()
     const [vw, setVw] = useState<number>()
     const [isLoading, setIsLoading] = useState<boolean>(true)
-    const { loginClick, setLoginClick } = useAppContext()
+    const { loginClick, setLoginClick, loggedInUser } = useAppContext()
     const navigate = useNavigate();
     const location = useLocation();
     const isForget = location.pathname.includes('forget')
@@ -26,7 +26,11 @@ const AuthLayoutPage = () => {
         setViewPortHeight();
         setViewportWidth();
         setIsLoading(false)
-    }, [])
+
+        if (loggedInUser) {
+            navigate('/v1/home')
+        }
+    }, [loggedInUser])
 
     return (
         isLoading ? "" :
@@ -36,19 +40,19 @@ const AuthLayoutPage = () => {
                         <img src={Logo} alt="" className="w-[25vh] h-[5vh] " />
                     </div>
                     <div className="flex bg-gray-300/50 rounded-xl">
-                        <div className="flex flex-col w-100 h-120 gap-5 p-2 py-4">
-                            <div className="flex flex-col gap-3">
+                        <div className="flex flex-col w-100 h-120 gap-5 p-2 py-4 md:w-140 md:h-[60vh] md:p-10">
+                            <div className="flex flex-col gap-3 md:text-xl">
                                 <div className={`flex p-2 justify-center ${isForget && 'hidden' || isReset && 'hidden'}`}>
                                     <button onClick={() => {
                                         navigate('login')
                                         setLoginClick(true)
-                                    }} className={`w-47 h-10 p-2 border border-gray-700 ${loginClick ? "border-green-800" : ""}`}>
+                                    }} className={`w-47 h-10 md:h-12 p-2 border border-gray-700 ${loginClick ? "border-green-800" : ""}`}>
                                         LOGIN
                                     </button>
                                     <button onClick={() => {
                                         navigate('register')
                                         setLoginClick(false)
-                                    }} className={`w-47 h-10 p-2 border border-gray-700 ${loginClick ? "" : "border-green-800"}`}>
+                                    }} className={`w-47 h-10 p-2 md:h-12 border border-gray-700 ${loginClick ? "" : "border-green-800"}`}>
                                         REGISTER
                                     </button>
                                 </div >
@@ -68,12 +72,19 @@ const AuthLayoutPage = () => {
                                     </h2>
                                     <div>
                                         <p className="flex text-justify text-xl text-gray-700">
-                                            Please enter your new password below: 
+                                            Please enter your new password below:
                                         </p>
                                     </div>
                                 </div>
                                 <div>
                                     <Outlet />
+                                </div>
+                                <div className="p-2 flex">
+                                    <div className="flex w-full h-[6vh] bg-amber-500 rounded-md shrink-0 p-2 items-center justify-center header-title text-xl text-white">
+                                        <button type="button" onClick={() => navigate('/v1/home')}>
+                                            HomePage
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

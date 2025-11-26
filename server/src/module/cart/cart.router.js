@@ -10,5 +10,6 @@ cartRouter.get('/list', cartCtrl.listCart)
 cartRouter.route('/items/:id')
     .put(cartCtrl.updateCart)
     .delete(cartCtrl.deleteCart)
+    .get(cartCtrl.getSingleCartById)
 
 module.exports = cartRouter

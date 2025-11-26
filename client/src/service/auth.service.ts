@@ -16,6 +16,7 @@ class authService {
             const response = await axiosConfig.post('/auth/login', data);
             localStorage.setItem('actualToken', response.data.data.actualToken)
             localStorage.setItem('refreshToken', response.data.data.refreshToken)
+            return response
         } catch (error) {
             throw error
         }

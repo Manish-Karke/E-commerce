@@ -4,9 +4,7 @@ const couponSvc = require("./coupon.service");
 class CouponController {
     createCoupon = async (req, res, next) => {
         try {
-            console.log(req.body)
             const transformedCouponDetails = couponSvc.transformedCouponDetails(req);
-            console.log(transformedCouponDetails)
 
             const couponDetails = await couponSvc.saveCoupon(transformedCouponDetails)
 

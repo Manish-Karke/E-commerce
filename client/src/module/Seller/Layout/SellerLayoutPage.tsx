@@ -10,23 +10,29 @@ const SellerLayoutPage = () => {
     const [viewUser, setViewUser] = useState<boolean>(false)
     const [vh, setVh] = useState<number>()
     const [vw, setVw] = useState<number>()
-    const {loggedInUser} = useAppContext();
+    const {loggedInUser, setLoggedInUser} = useAppContext();
 
     useEffect(() => {
         setVw(() => window.innerWidth)
         setVh(() => window.innerHeight)
     }, [])
 
+    useEffect(() => {
+        if(loggedInUser?.role !== 'seller') {
+            navigate('/v1/home')
+        }
+    }, [loggedInUser])
+
     return (
         <>
             <div style={{ height: `${vh}px`, width: `${vw}px` }} className="flex flex-col p-2">
                 <div className="flex items-center justify-center">
                     <div className="flex fixed top-2 left-1/2 -translate-x-1/2 w-[98%] h-[8vh] z-50 items-center justify-between gap-4 px-4 text-green-800 bg-black/20 rounded-xl">
-                        <AiOutlineHome onClick={() => navigate('/v1/home')} size={35} />
+                        <AiOutlineHome onClick={() => navigate('/v1/home')} className="flex text-4xl md:text-5xl" />
                         <div className="flex h-[3vh] w-[27vw]" onClick={() => navigate('/seller')}>
                             <img src={Logo} alt="" />
                         </div>
-                        <FaRegCircleUser size={35} onClick={() => setViewUser(true)} />
+                        <FaRegCircleUser className="flex text-4xl md:text-5xl" onClick={() => setViewUser(true)} />
                     </div>
                 </div>
                 <div className="flex w-full h-[9vh] shrink-0"></div>
@@ -60,8 +66,9 @@ const SellerLayoutPage = () => {
                                     <div className="flex gap-5">
                                         <button
                                             onClick={() => {
-                                                navigate('/')
+                                                navigate('/v1/home')
                                                 localStorage.clear();
+                                                setLoggedInUser(null)
                                             }}
                                             className="mt-3 bg-green-700 text-white px-3 py-1 rounded-lg w-[50%] h-[5vh]">
                                             YES

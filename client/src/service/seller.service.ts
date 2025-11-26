@@ -25,6 +25,8 @@ class SellerService {
     updateCategory = async(id: string, formData: FormData) => {
         await axiosConfig.put(`/seller/products/${id}`, formData)
     }
+
+    
 }
 
 const sellerSvc = new SellerService()

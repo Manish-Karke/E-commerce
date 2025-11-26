@@ -62,8 +62,8 @@ const AdminUserPage = () => {
                                         </h2 >
                                     </div >
                                     <div className="flex flex-col px-4 pt-2 gap-4">
-                                        <div className="flex items-center w-full justify-between mt-3">
-                                            <p className="header-title text-lg">
+                                        <div className="flex items-center w-full justify-between mt-[3vh]">
+                                            <p className="header-title text-lg md:text-2xl">
                                                 Existing Users
                                             </p>
                                         </div>
@@ -75,7 +75,7 @@ const AdminUserPage = () => {
                                                             onClick={() => navigate(`view/${items._id}`)}
                                                             className="flex gap-2 h-auto w-full shrink-0 items-center justify-between p-2 rounded-md border border-violet-300 ">
                                                             <div className="flex flex-col gap-2 w-[87%]">
-                                                                <div className="flex text-lg gap-3">
+                                                                <div className="flex text-lg gap-3 md:gap-10">
                                                                     {!items.avatar &&
                                                                         <div className="flex w-[28%] h-auto shrink-0 text-blue-400">
                                                                             <FaUserCircle size={80} />
@@ -87,15 +87,15 @@ const AdminUserPage = () => {
                                                                         </div>
                                                                     }
                                                                     <div className="p-2">
-                                                                        <p className="flex text-lg">
+                                                                        <p className="flex text-lg md:text-2xl">
                                                                             {items.name}
                                                                         </p>
-                                                                        <p className="flex text-lg">
+                                                                        <p className="flex text-lg md:text-2xl">
                                                                             {items.role}
                                                                         </p>
                                                                     </div>
                                                                 </div>
-                                                                <p className="flex text-lg">
+                                                                <p className="flex text-lg md:text-2xl">
                                                                     {items.email}
                                                                 </p>
                                                             </div>
